@@ -7,6 +7,7 @@ import com.nowcoder.community.entity.User;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.MailClient;
+import com.sun.org.apache.bcel.internal.generic.ARETURN;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -209,6 +210,36 @@ public class UserService implements CommunityConstant {
         userMapper.updatePassword(user.getId(), password);
 
         map.put("user", user);
+        return map;
+    }
+
+    // 重置密码
+    public Map<String, Object> updatePassword(int userID, String oldPassword,String newPassword){
+        Map<String, Object> map = new HashMap<>();
+
+        //空值处理
+        if(StringUtils.isBlank(oldPassword)){
+            map.put("oldPasswordMsg","旧密码不能为空！");
+            return map;
+        }
+
+        //空值处理
+        if(StringUtils.isBlank(newPassword)){
+            map.put("newPasswordMsg","新密码不能为空！");
+            return map;
+        }
+
+        //验证原始密码
+        User user = userMapper.selectById(userID);
+        oldPassword = CommunityUtil.md5(oldPassword+user.getSalt());
+        if(!user.getPassword().equals(oldPassword)){
+            map.put("oldPasswordMsg","旧密码输入错误！");
+            return map;
+        }
+
+        //更新密码
+        newPassword = CommunityUtil.md5(newPassword+user.getSalt());
+        userMapper.updatePassword(userID,newPassword);
         return map;
     }
 }
