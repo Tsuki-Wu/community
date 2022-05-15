@@ -1,6 +1,7 @@
 $(function(){
 	$("#verifyCodeBtn").click(getVerifyCode);
-});
+}
+);
 
 function getVerifyCode() {
     var email = $("#your-email").val();

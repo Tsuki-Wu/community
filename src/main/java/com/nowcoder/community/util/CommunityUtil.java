@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class CommunityUtil {
         return DigestUtils.md5DigestAsHex(key.getBytes());  //spring的工具类
     }
 
-    public static String getJSONString(int code, String msg, Map<String,Object>map){
+    public static String getJSONString(int code, String msg, Map<String,Object> map){
         JSONObject json = new JSONObject();
         json.put("code",code);
         json.put("msg",msg);
@@ -41,5 +42,12 @@ public class CommunityUtil {
 
     public static String getJSONString(int code){
         return getJSONString(code,null,null);
+    }
+
+    public static void main(String[] args){
+        Map<String,Object> map = new HashMap<>();
+        map.put("name","zhangsan");
+        map.put("age",25);
+        System.out.println(getJSONString(0,"ok",map));
     }
 }
